@@ -2,7 +2,7 @@
   :description "A Ph.d project to hypernormalise the Gene Ontology"
   :url "https://arxiv.org/abs/1711.07273"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [tawny-bfo/tawny-bfo "0.1.0-SNAPSHOT]
+                 [tawny-bfo/tawny-bfo "0.1.0-SNAPSHOT"]
                    ;; Text hacking only
                  [org.clojure/data.csv "0.1.3"]
                  [net.sourceforge.owlapi/owlapi-distribution "4.2.8"]
