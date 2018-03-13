@@ -197,7 +197,6 @@
 (defn binding
   ([chemical-or-chemical-role-or-cellular-component]
    (binding [Binding RealizableEntity]   chemical-or-chemical-role-or-cellular-component))
-  
   ([super-binding chemical-or-chemical-role-or-cellular-component]
    (binding-to-chemical
     super-binding
@@ -206,3 +205,79 @@
      chemical-or-chemical-role-or-cellular-component))))
 ;; #+end_src
 
+;; * Transporters
+;; Examples which are of different kinds:
+;; symporter -- tightly coupled transport of two things (uniport)
+;; neurotransmitter tranport -- molecule plays a role transportee
+;; neutral amino-acid -- quality of thing
+;; phospholipid -- molecule of certain kind
+;; transmembrane -- what it is transported over
+;; protein transport out of plasma membrane raft -- transported from
+;; transported to
+;; voltage-gated calcium transporter
+
+;; How to deal with this?
+
+;; symporter uniporter antiporter -- how many transportees, and their
+;; directions -- antiporter makes directionality dubious because we are doing
+;; a swap. Conclusion: simple transport and combined transporter -- simple is
+;; start and end, combined
+
+;; start and end are properties of the thing rather than the process.
+
+;; the transportee can be a chemical (phospholipid), chemical with role
+;; (neurotransmitter), chemical with quality (neutral)
+
+;; over: transmembrane, or voltage-gated -- quality of the thing we are moving
+;; over
+
+;; Naming: can be all sorts of things -- named after the start, the end, or
+;; the entity being transported
+
+;; #+begin_src clojure
+(defactivity Transport
+  "To enable the movement of an entity in a directed manner.")
+
+(defoproperty hasCargo
+  :super hasParticipant
+  :range chebi/chemical_entity)
+
+(defoproperty movesFrom)
+(defoproperty movesTo)
+
+(refine ToTransport :super (owl-some inheresIn chebi/chemical_entity))
+
+(defn transport [name cargo from to]
+  (let [o geneontology
+        proc
+        (p/p
+         owl-class
+         o
+         (str name "Process")
+         :super
+         nProcess
+         (when cargo
+           (owl-some hasCargo
+                     (chemicalize cargo)))
+         (when from
+           (owl-some movesFrom from))
+         (when to
+           (owl-some movesTo to)))]
+    (realised-in name proc)))
+;; #+end_src
+
+;; Issues to be dealt with: With respect to transport there appera to be
+;; different notions
+
+
+
+
+;; #+begin_src clojure
+(apply
+ as-disjoint
+ (direct-subclasses nProcess))
+
+(apply
+ as-disjoint
+ (direct-subclasses RealizableEntity))
+;; #+end_src
